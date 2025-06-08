@@ -20,7 +20,7 @@ function MainPage() {
 
   return (
     <div className="text-center p-10 bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen">
-      <h1 className="text-3xl font-bold">메인 소개 페이지</h1>
+      <h1 className="text-3xl font-bold">모비노기 ✔️</h1>
       <button
         onClick={handleLogin}
         className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
