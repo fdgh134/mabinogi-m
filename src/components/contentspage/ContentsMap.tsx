@@ -12,7 +12,7 @@ export default function ContentsMap({ onSelect }: Props) {
             📒일일 숙제
           </li>
           <li className="px-4 cursor-pointer" onClick={() => onSelect("materials")}>
-            🧰생산 재료
+            🧰가공 재료
           </li>
         </ul>
       </nav>

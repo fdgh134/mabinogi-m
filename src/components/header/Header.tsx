@@ -29,13 +29,13 @@ export default function Header() {
         <p>환영합니다, {user?.displayName}님!</p>
       </div>
       <div className="mt-4">
+        <DarkModeToggle />
         <button
           onClick={handleLogout}
           className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded"
         >
           로그아웃
         </button>
-        <DarkModeToggle />
       </div>
     </div>
   )

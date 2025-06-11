@@ -1,3 +1,12 @@
+import DailyCheck from "./DailyCheck";
+
 export default function DailyQuest() {
-  return <div>일일 숙제 내용</div>;
+  return (
+    <div>
+      일일 체크리스트
+      <DailyCheck />
+    </div>
+    
+  )
+  
 }
