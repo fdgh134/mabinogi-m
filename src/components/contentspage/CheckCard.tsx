@@ -3,7 +3,7 @@ interface CheckCardProps {
   description?: string;
   totalCount: number;
   checkedCount: number;
-  type: "daily" | "weekly";
+  type: "daily" | "weekly" | "repeat";
   onToggle: (index: number) => void;
 }
 
