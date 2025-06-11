@@ -4,6 +4,8 @@ import type { Item } from "./Item";
 export default function MaterialInfo() {
   const [items, setItems] = useState<Item[]>([]);
   const [itemNameMap, setItemNameMap] = useState<Map<string, string>>(new Map());
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
 
   useEffect(() => {
     fetch("https://mabinogi-api.onrender.com/api/items")
@@ -26,7 +28,13 @@ export default function MaterialInfo() {
     return isIdLike ? getName(cleaned) : cleaned;
   };
 
-  const grouped = items.reduce<Record<string, Item[]>>((acc, item) => {
+  const filteredItems = items.filter((item) => {
+    const matchesSearch = item.name.includes(searchTerm);
+    const matchesCategory = selectedCategory === "전체" || item.subCategory === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const grouped = filteredItems.reduce<Record<string, Item[]>>((acc, item) => {
     const key = item.subCategory || "기타";
     if (!acc[key]) acc[key] = [];
     acc[key].push(item);
@@ -39,13 +47,36 @@ export default function MaterialInfo() {
     return a.localeCompare(b);
   });
 
+  const subCategoryList = Array.from(new Set(items.map(item => item.subCategory))).sort();
+
   return (
     <div>
-      <h2 className="mb-4">생산 정보</h2>
+      <h2 className="mb-4">가공 정보</h2>
+
+      <div className="mb-6 flex flex-col md:flex-row gap-4 items-start md:items-center">
+        <input
+          type="text"
+          placeholder="🔍 아이템 이름 검색"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 border border-slate-700/50 dark:border-slate-300/50 rounded w-full md:w-64"
+        />
+        <select
+          aria-label="카테고리 선택"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="p-2 bg-white text-black dark:bg-gray-800 dark:text-white border-slate-700/50 dark:border-slate-300/50 border rounded"
+        >
+          <option value="전체">전체 카테고리</option>
+          {subCategoryList.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+      </div>
 
       {sortedGroups.map(([subCategory, groupItems]) => (
         <section key={subCategory} className="mb-12">
-          <h3 className="text-xl font-semibold mb-3 pb-2 border-b border-slate-700/50 dark:border-slate-300/50 pb-1">
+          <h3 className="text-xl font-semibold mb-3 pb-2 border-b border-slate-700/50 dark:border-slate-300/50">
             📂 {subCategory}
           </h3>
 
