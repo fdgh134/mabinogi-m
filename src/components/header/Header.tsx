@@ -23,12 +23,11 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between p-10 bg-white text-black dark:bg-gray-900 dark:text-white">
+    <div className="flex flex-row align-middle justify-between p-10 bg-white text-black dark:bg-gray-900 dark:text-white">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold">모비노기✔️</h1>
-        <p>환영합니다, {user?.displayName}님!</p>
+        <h1 className="text-2xl">환영합니다, {user?.displayName}님!</h1>
       </div>
-      <div className="mt-4">
+      <div>
         <DarkModeToggle />
         <button
           onClick={handleLogout}
