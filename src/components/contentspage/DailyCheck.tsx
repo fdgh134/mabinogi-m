@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import CheckCard from "./CheckCard";
-import { getChecklist, updateChecklistItem } from "../../firebase/checklistService";
+import AddChecklistModal from "./AddChecklistModal";
+import { 
+  getChecklist,
+  updateChecklistItem,
+  addChecklistItem,
+  deleteChecklistItem 
+} from "../../firebase/checklistService";
 interface DailyCheckProps {
   id: string;
   title: string;
@@ -14,6 +20,7 @@ interface DailyCheckProps {
 export default function DailyCheck() {
   const [repeatCycle, setRepeatCycle] = useState(1);
   const [checked, setChecked] = useState<DailyCheckProps[]>([]);
+  const [modalType, setModalType] = useState<"daily" | "trade" | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,27 +91,44 @@ export default function DailyCheck() {
     if (type === "repeat") setRepeatCycle(1);
   };
 
+  const handleDelete = async (id: string) => {
+    await deleteChecklistItem(id);
+    setChecked(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleAdd = async (item: Omit<DailyCheckProps, "id">) => {
+    const newItem = await addChecklistItem(item);
+    setChecked(prev => [...prev, newItem]);
+    setModalType(null); // 닫기
+  };
+
   const sections: {
     title: string;
     list: DailyCheckProps[];
     type: "daily" | "weekly" | "repeat" | "trade";
     extra?: string;
+    showAdd?: boolean;
   }[] = [
     { title: "🪢 반복 퀘스트", list: checked.filter(i => i.type === "repeat"), type: "repeat", extra: `(${repeatCycle}회차)` },
-    { title: "📅 일간 숙제", list: checked.filter(i => i.type === "daily"), type: "daily" },
+    { title: "📅 일간 숙제", list: checked.filter(i => i.type === "daily"), type: "daily", showAdd: true },
     { title: "🗓 주간 숙제", list: checked.filter(i => i.type === "weekly"), type: "weekly" },
-    { title: "💱 물물 교환", list: checked.filter(i => i.type === "trade"), type: "trade" },
+    { title: "💱 물물 교환", list: checked.filter(i => i.type === "trade"), type: "trade", showAdd: true },
   ];
 
   return (
     <div className="space-y-8">
-      {sections.map(({ title, list, type, extra }) => (
+      {sections.map(({ title, list, type, extra, showAdd }) => (
         <section key={type}>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold mb-2">
               {title} {extra && <span className="text-sm text-gray-500">{extra}</span>}
             </h3>
-            <button onClick={() => resetSection(type)} className="cursor-pointer">🔃</button>
+            <div className="flex gap-2">
+              {showAdd && (type === "daily" || type === "trade") && (
+                <button onClick={() => setModalType(type)} className="cursor-pointer text-xl">➕</button>
+              )}
+              <button onClick={() => resetSection(type)} className="cursor-pointer">🔃</button>
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
             {list.map(item => (
@@ -112,11 +136,21 @@ export default function DailyCheck() {
                 key={item.id}
                 {...item}
                 onToggle={index => toggleCheck(item.id, index)}
+                onDelete={["daily", "trade"].includes(item.type) ? () => handleDelete(item.id) : undefined}
               />
             ))}
           </div>
         </section>
       ))}
+
+      {/* 모달 */}
+      {modalType && (
+        <AddChecklistModal
+          type={modalType}
+          onAdd={handleAdd}
+          onClose={() => setModalType(null)}
+        />
+      )}
   </div>
   )
 }

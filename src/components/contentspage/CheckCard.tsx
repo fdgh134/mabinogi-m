@@ -1,10 +1,12 @@
 interface CheckCardProps {
+  id: string;
   title: string;
   description?: string;
   totalCount: number;
   checkedCount: number;
   type: "daily" | "weekly" | "repeat" | "trade";
   onToggle: (index: number) => void;
+  onDelete?: () => void;
 }
 
 export default function CheckCard({ 
@@ -12,14 +14,20 @@ export default function CheckCard({
   description, 
   totalCount, 
   checkedCount, 
-  onToggle 
+  onToggle,
+  onDelete,
 }: CheckCardProps) {
   const isDone = checkedCount >= totalCount;
-  
+
+  const handleDeleteClick = () => {
+    const confirmed = window.confirm("정말 삭제하시겠습니까?");
+    if (confirmed && onDelete) {
+      onDelete();
+    }
+  };
   return (
     <div
-      className={`border rounded-xl p-4 shadow transition
-      bg-white dark:bg-gray-800
+      className={`border rounded-xl p-4 shadow transition bg-white dark:bg-gray-800
       ${isDone ? "opacity-60" : ""}`}
     >
       <div className="flex justify-between items-start mb-2">
@@ -56,6 +64,18 @@ export default function CheckCard({
       <p className="text-xs text-right text-gray-400 dark:text-gray-500">
         {checkedCount} / {totalCount}
       </p>
+
+      {/* 삭제 버튼 */}
+      {onDelete && (
+        <div className="mt-2 text-left">
+          <button
+            onClick={handleDeleteClick}
+            className="text-md"
+          >
+            🗑
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -28,8 +28,11 @@ export const getChecklist = async (): Promise<ChecklistItem[]> => {
   })) as ChecklistItem[];
 };
 
-export const addChecklistItem = async (item: ChecklistItem) => {
-  await addDoc(checklistRef, item);
+export const addChecklistItem = async (
+  item: Omit<ChecklistItem, "id">
+): Promise<ChecklistItem & { id: string }> => {
+  const docRef = await addDoc(collection(db, "checklist"), item);
+  return { ...item, id: docRef.id };
 };
 
 export const updateChecklistItem = async (id: string, data: Partial<ChecklistItem>) => {
