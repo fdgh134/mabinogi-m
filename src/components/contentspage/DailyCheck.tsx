@@ -5,8 +5,12 @@ import {
   getChecklist,
   updateChecklistItem,
   addChecklistItem,
-  deleteChecklistItem 
+  deleteChecklistItem,
+  copyChecklistToCharacter,
 } from "../../firebase/checklistService";
+import { useAuthStore } from "../../hooks/useAuthStore";
+import { useCharacterStore } from "../../stores/useCharacterStore";
+
 interface DailyCheckProps {
   id: string;
   title: string;
@@ -22,37 +26,55 @@ export default function DailyCheck() {
   const [checked, setChecked] = useState<DailyCheckProps[]>([]);
   const [modalType, setModalType] = useState<"daily" | "trade" | null>(null);
 
+  const user = useAuthStore(state => state.user);
+  const character = useCharacterStore(state => state.selected);
+
   useEffect(() => {
-    const fetchData = async () => {
-      const items = await getChecklist();
-      const final = items.map(item => ({
-        ...item,
-        id: item.id ?? "",
-        isDone: item.isDone ?? false,
-      }));
-      setChecked(final);
-    };
-    fetchData();
-  }, []);
+    if (!user || !character) return;
+    const syncChecklist = async () => {
+    const existing = await getChecklist(user.uid, character);
+
+    if (existing.length === 0) {
+      // 템플릿 복사 수행
+      await copyChecklistToCharacter(user.uid, character);
+    }
+
+    const items = await getChecklist(user.uid, character);
+    const final = items.map(item => ({
+      ...item,
+      id: item.id ?? "",
+      isDone: item.isDone ?? false,
+    }));
+    setChecked(final);
+  };
+
+  syncChecklist();
+}, [user, character]);
 
   const toggleCheck = async (id: string, index: number) => {
     // 먼저 체크 상태 계산
     const updated = checked.map((item) => {
       if (item.id !== id) return item;
+
       const newCount = index < item.checkedCount
         ? item.checkedCount - 1
         : item.checkedCount + 1;
+
       return {
         ...item,
         checkedCount: Math.max(0, Math.min(item.totalCount, newCount)),
+        isDone: newCount >= item.totalCount,
       };
     });
 
     setChecked(updated);
 
     const changed = updated.find(item => item.id === id);
-    if (changed) {
-      await updateChecklistItem(id, { checkedCount: changed.checkedCount });
+    if (changed && user && character) {
+      await updateChecklistItem(user.uid, character, id, {
+        checkedCount: changed.checkedCount,
+        isDone: changed.isDone,
+      });
     }
 
     // 체크 후 repeat 항목만 추출
@@ -63,28 +85,40 @@ export default function DailyCheck() {
     if (allRepeatDone) {
       const resetRepeat = updated.map((item) =>
         item.type === "repeat"
-          ? { ...item, checkedCount: 0 }
+          ? { ...item, checkedCount: 0, isDone: false }
           : item
       );
       setChecked(resetRepeat);
       setRepeatCycle((prev) => prev + 1);
 
       await Promise.all(
-        repeatItems.map(item => updateChecklistItem(item.id, { checkedCount: 0 }))
+        repeatItems.map((item) =>
+          updateChecklistItem(user!.uid, character!, item.id, {
+            checkedCount: 0,
+            isDone: false,
+          })
+        )
       );
     }
   };
 
   const resetSection = async (type: "daily" | "weekly" | "repeat" | "trade") => {
+    if (!user || !character) return;
+
     const updated = checked.map(item =>
-      item.type === type ? { ...item, checkedCount: 0 } : item
+      item.type === type 
+        ? { ...item, checkedCount: 0 } 
+        : item
     );
     setChecked(updated);
 
     const affected = checked.filter(item => item.type === type);
     await Promise.all(
-      affected.map(item =>
-        updateChecklistItem(item.id, { checkedCount: 0 })
+      affected.map((item) =>
+        updateChecklistItem(user.uid, character, item.id, {
+          checkedCount: 0,
+          isDone: false,
+        })
       )
     );
 
@@ -92,13 +126,20 @@ export default function DailyCheck() {
   };
 
   const handleDelete = async (id: string) => {
-    await deleteChecklistItem(id);
+    if (!user || !character) return;
+    await deleteChecklistItem(user.uid, character, id);
     setChecked(prev => prev.filter(item => item.id !== id));
   };
 
   const handleAdd = async (item: Omit<DailyCheckProps, "id">) => {
-    const newItem = await addChecklistItem(item);
-    setChecked(prev => [...prev, newItem]);
+    if (!user || !character) return;
+    const newItem = await addChecklistItem(user.uid, character, item);
+    const converted: DailyCheckProps = {
+    ...newItem,
+    id: newItem.id ?? "", // string 보장
+    isDone: newItem.isDone ?? false,
+  };
+    setChecked(prev => [...prev, converted]);
     setModalType(null); // 닫기
   };
 
@@ -114,6 +155,14 @@ export default function DailyCheck() {
     { title: "🗓 주간 숙제", list: checked.filter(i => i.type === "weekly"), type: "weekly" },
     { title: "💱 물물 교환", list: checked.filter(i => i.type === "trade"), type: "trade", showAdd: true },
   ];
+
+  if (!character) {
+    return (
+      <div className="text-center text-gray-500 mt-10">
+        상단에 캐릭터를 추가 후 사용해 주세요.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
