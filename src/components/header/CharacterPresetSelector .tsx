@@ -33,7 +33,10 @@ export default function CharacterPresetSelector() {
   addCharacter(trimmed);
   await copyChecklistToCharacter(user.uid, trimmed);
 
-  setSelectedCharacter(trimmed);
+  setSelectedCharacter(null);
+  setTimeout(() => {
+    setSelectedCharacter(trimmed);
+  }, 0);
   setNewCharacter("");
 };
 
@@ -73,13 +76,13 @@ export default function CharacterPresetSelector() {
           </div>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-row gap-2">
         <input
           type="text"
           placeholder="새 캐릭터 이름"
           value={newCharacter}
           onChange={(e) => setNewCharacter(e.target.value)}
-          className="px-3 py-1 border rounded w-full dark:bg-gray-800 dark:text-white"
+          className="px-3 py-1 border flex-1 rounded w-fit dark:bg-gray-800 dark:text-white"
         />
         <button
           onClick={handleAddCharacter}

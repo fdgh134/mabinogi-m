@@ -5,7 +5,7 @@ interface CharacterStore {
   characters: string[];
   selected: string | null;
   addCharacter: (name: string) => void;
-  setSelectedCharacter: (name: string) => void;
+  setSelectedCharacter: (name: string | null) => void;
   removeCharacter: (name: string) => void;
 }
 

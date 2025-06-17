@@ -6,7 +6,6 @@ import {
   updateChecklistItem,
   addChecklistItem,
   deleteChecklistItem,
-  copyChecklistToCharacter,
 } from "../../firebase/checklistService";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { useCharacterStore } from "../../stores/useCharacterStore";
@@ -25,27 +24,24 @@ export default function DailyCheck() {
   const [repeatCycle, setRepeatCycle] = useState(1);
   const [checked, setChecked] = useState<DailyCheckProps[]>([]);
   const [modalType, setModalType] = useState<"daily" | "trade" | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const user = useAuthStore(state => state.user);
   const character = useCharacterStore(state => state.selected);
 
   useEffect(() => {
     if (!user || !character) return;
+
     const syncChecklist = async () => {
-    const existing = await getChecklist(user.uid, character);
-
-    if (existing.length === 0) {
-      // 템플릿 복사 수행
-      await copyChecklistToCharacter(user.uid, character);
-    }
-
-    const items = await getChecklist(user.uid, character);
-    const final = items.map(item => ({
-      ...item,
-      id: item.id ?? "",
-      isDone: item.isDone ?? false,
+      setIsLoading(true);
+      const items = await getChecklist(user.uid, character);
+      const final = items.map(item => ({
+        ...item,
+        id: item.id ?? "",
+        isDone: item.isDone ?? false,
     }));
     setChecked(final);
+    setIsLoading(false);
   };
 
   syncChecklist();
@@ -160,6 +156,14 @@ export default function DailyCheck() {
     return (
       <div className="text-center text-gray-500 mt-10">
         상단에 캐릭터를 추가 후 사용해 주세요.
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="text-center text-gray-500 mt-10">
+        체크리스트를 불러오는 중입니다...
       </div>
     );
   }
