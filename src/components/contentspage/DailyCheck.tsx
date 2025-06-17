@@ -139,6 +139,10 @@ export default function DailyCheck() {
     setModalType(null); // 닫기
   };
 
+  const sortChecklist = (list: DailyCheckProps[]) => {
+    return list.slice().sort((a, b) => a.title.localeCompare(b.title, "ko"));
+  };
+
   const sections: {
     title: string;
     list: DailyCheckProps[];
@@ -146,10 +150,10 @@ export default function DailyCheck() {
     extra?: string;
     showAdd?: boolean;
   }[] = [
-    { title: "🪢 반복 퀘스트", list: checked.filter(i => i.type === "repeat"), type: "repeat", extra: `(${repeatCycle}회차)` },
-    { title: "📅 일간 숙제", list: checked.filter(i => i.type === "daily"), type: "daily", showAdd: true },
-    { title: "🗓 주간 숙제", list: checked.filter(i => i.type === "weekly"), type: "weekly" },
-    { title: "💱 물물 교환", list: checked.filter(i => i.type === "trade"), type: "trade", showAdd: true },
+    { title: "🪢 반복 퀘스트", list: sortChecklist(checked.filter(i => i.type === "repeat")), type: "repeat", extra: `(${repeatCycle}회차)` },
+    { title: "📅 일간 숙제", list: sortChecklist(checked.filter(i => i.type === "daily")), type: "daily", showAdd: true },
+    { title: "🗓 주간 숙제", list: sortChecklist(checked.filter(i => i.type === "weekly")), type: "weekly" },
+    { title: "💱 물물 교환", list: sortChecklist(checked.filter(i => i.type === "trade")), type: "trade", showAdd: true },
   ];
 
   if (!character) {
