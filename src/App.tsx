@@ -5,6 +5,7 @@ import { auth } from "./lib/firebase";
 import { useAuthStore } from "./hooks/useAuthStore";
 import MainPage from "./pages/MainPage";
 import ContentPage from "./pages/ContentPage";
+import { requestNotificationPermission } from "./lib/requestNotificationPermission";
 
 function App() {
   const setUser = useAuthStore((state) => state.setUser);
@@ -19,6 +20,14 @@ function App() {
 
     return () => unsubscribe();
   }, [setUser, setAuthReady]);
+
+  useEffect(() => {
+  requestNotificationPermission().then((token) => {
+    if (token) {
+      console.log("FCM 토큰:", token);
+    }
+  });
+}, []);
 
   if (!isAuthReady) {
     return <div className="text-center p-10">⏳ 로그인 상태 확인 중...</div>;

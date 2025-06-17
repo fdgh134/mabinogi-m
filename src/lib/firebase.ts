@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getMessaging } from "firebase/messaging";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyA-wKRe1T4csgtwt-2vwO42BJvTCXDoZ3U",
   authDomain: "mabinogi-m-1881b.firebaseapp.com",
   projectId: "mabinogi-m-1881b",
@@ -17,4 +18,5 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export const db = getFirestore(app);
+export const messaging = getMessaging(app);
 export { auth, provider };

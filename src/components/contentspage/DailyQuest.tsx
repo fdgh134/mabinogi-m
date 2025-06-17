@@ -1,28 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import DailyCheck from "./DailyCheck";
+import { useAuthStore } from "../../hooks/useAuthStore";
+import { useAlertToggle } from "../../hooks/useAlertToggle";
 
 export default function DailyQuest() {
-  
-  const [alertEnabled, setAlertEnabled] = useState(true);
+  const user = useAuthStore((state) => state.user);
+  const { alertEnabled, toggleAlert } = useAlertToggle(user?.uid ?? "");
 
   useEffect(() => {
     if (Notification.permission !== "granted") {
       Notification.requestPermission();
     }
   }, []);
-
-  useEffect(() => {
-    if (!alertEnabled) return;
-    const timer = setInterval(() => {
-      const now = new Date();
-      if (now.getMinutes() === 57 && now.getSeconds() === 0) {
-        new Notification("🌀 불길한 소환의 결계", {
-          body: "곧 시작됩니다! (3분 전)",
-        });
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [alertEnabled]);
 
   return (
     <div>
@@ -34,7 +23,7 @@ export default function DailyQuest() {
             <input
               type="checkbox"
               checked={alertEnabled}
-              onChange={() => setAlertEnabled((prev) => !prev)}
+              onChange={toggleAlert}
               className="peer sr-only"
             />
             <div className="w-10 h-6 bg-gray-300 peer-checked:bg-blue-500 dark:bg-gray-600 dark:peer-checked:bg-blue-600 rounded-full transition-colors duration-200"></div>

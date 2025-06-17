@@ -54,15 +54,15 @@ export default function CharacterPresetSelector() {
     <div className="mt-4">
       <div className="flex items-center gap-2 mb-2">
         {characters.map((name) => (
-          <div key={name} className={`flex items-center rounded border gap-1 px-1 ${
+          <div key={name} className={`flex items-center px-3 rounded border gap-1 ${
                   selected === name
-                    ? "border-blue-400 text-gray-700 dark:text-gray-200 font-bold"
+                    ? "border-2 border-blue-400 text-gray-700 dark:text-gray-200 font-bold"
                     : "border-gray-200 dark:border-gray-700 dark:text-white"
                 }`}>
             <button 
               key={name}
               onClick={() => setSelectedCharacter(name)}
-              className="px-3 py-1 rounded"
+              className="py-1 rounded"
               >
               {name}
             </button>
