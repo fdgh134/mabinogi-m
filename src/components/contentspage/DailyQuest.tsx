@@ -2,11 +2,14 @@ import { useEffect } from "react";
 import DailyCheck from "./DailyCheck";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { useAlertToggle } from "../../hooks/useAlertToggle";
+import { useNotificationAlarm } from "../../hooks/useNotificationAlarm";
 
 export default function DailyQuest() {
   const user = useAuthStore((state) => state.user);
   const { alertEnabled, toggleAlert } = useAlertToggle(user?.uid ?? "");
 
+  useNotificationAlarm(alertEnabled);
+  
   useEffect(() => {
     if (Notification.permission !== "granted") {
       Notification.requestPermission();

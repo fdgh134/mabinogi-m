@@ -24,7 +24,7 @@ function App() {
   useEffect(() => {
   requestNotificationPermission().then((token) => {
     if (token) {
-      console.log("FCM 토큰:", token);
+      // console.log("FCM 토큰:", token);
     }
   });
 }, []);

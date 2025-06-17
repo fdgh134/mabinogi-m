@@ -20,7 +20,7 @@ export const requestNotificationPermission = async () => {
     });
 
     if (token) {
-      console.log("✅ 발급된 FCM 토큰:", token);
+      // console.log("✅ 발급된 FCM 토큰:", token);
       return token;
     } else {
       console.warn("토큰 발급 실패");
