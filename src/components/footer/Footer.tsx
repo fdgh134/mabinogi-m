@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="w-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 text-sm py-6 mt-10">
-      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2">
+      <div className="max-w-6xl mx-auto px-10 flex flex-col md:flex-row justify-between items-center gap-2">
         <div className="text-center md:text-left">
           ⓒ {new Date().getFullYear()} Mabinogi-M Checklist by YoomJJu
         </div>
@@ -15,15 +15,21 @@ export default function Footer() {
             GitHub
           </a>
           <a
-            href="https://mabinogi.nexon.com"
+            href="https://mabinogimobile.nexon.com/Main"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline hover:text-blue-500"
           >
             공식 사이트
           </a>
+          <a
+            href="mailto:fdgh134@naver.com"
+            className="hover:underline hover:text-blue-500"
+          >
+            메일 보내기
+          </a>
         </div>
       </div>
     </footer>
   );
-}
+};

@@ -19,16 +19,24 @@ function MainPage() {
   };
 
   return (
-    <div className="text-center p-10 bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen">
-      <h1 className="text-3xl font-bold">모비노기 ✔️</h1>
-      <button
-        onClick={handleLogin}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
-      >
-        구글 로그인
-      </button>
-      <div className="mt-4">
+    <div className="relative min-h-screen flex items-center justify-center bg-#F6F4F4 text-black dark:bg-gray-900 dark:text-white px-4">
+      {/* 다크모드 토글 - 우측 상단 */}
+      <div className="absolute top-4 right-4">
         <DarkModeToggle />
+      </div>
+
+      {/* 중앙 콘텐츠 */}
+      <div className="text-center space-y-6">
+        <h1 className="text-4xl font-extrabold tracking-tight">모비노기✔️</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">
+          마비노기 모바일 유저를 위한 개인 도우미 도구
+        </p>
+        <button
+          onClick={handleLogin}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg shadow"
+        >
+          Google 계정으로 로그인
+        </button>
       </div>
     </div>
   );

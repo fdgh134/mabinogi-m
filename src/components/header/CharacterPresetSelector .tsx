@@ -57,7 +57,7 @@ export default function CharacterPresetSelector() {
           <div key={name} className={`flex items-center px-3 rounded border gap-1 ${
                   selected === name
                     ? "border-2 border-blue-400 text-gray-700 dark:text-gray-200 font-bold"
-                    : "border-gray-200 dark:border-gray-700 dark:text-white"
+                    : "border-gray-400 dark:border-gray-700 dark:text-white"
                 }`}>
             <button 
               key={name}
