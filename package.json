@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "clean": "rimraf dist"
+    "clean": "npx rimraf dist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
