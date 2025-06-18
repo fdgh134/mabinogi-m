@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import CheckCard from "./CheckCard";
 import AddChecklistModal from "./AddChecklistModal";
 import { 
@@ -46,6 +46,55 @@ export default function DailyCheck() {
 
   syncChecklist();
 }, [user, character]);
+
+const resetSection = useCallback(async (type: "daily" | "weekly" | "repeat" | "trade") => {
+    if (!user || !character) return;
+
+    const updated = checked.map(item =>
+      item.type === type 
+        ? { ...item, checkedCount: 0 } 
+        : item
+    );
+    setChecked(updated);
+
+    const affected = checked.filter(item => item.type === type);
+    await Promise.all(
+      affected.map((item) =>
+        updateChecklistItem(user.uid, character, item.id, {
+          checkedCount: 0,
+          isDone: false,
+        })
+      )
+    );
+
+    if (type === "repeat") setRepeatCycle(1);
+  }, [user, character, checked]);
+
+useEffect(() => {
+  const now = new Date();
+  const lastReset = localStorage.getItem("lastReset") || "";
+  const today = now.toISOString().split("T")[0];
+  const isMonday = now.getDate() === 1;
+
+  const resetDaily = async () => await resetSection("daily");
+  const resetTrade = async () => await resetSection("trade");
+  const resetWeekly = async () => await resetSection("weekly");
+  const resetRepeat = async () => await resetSection("repeat");
+
+  if (user && character) {
+    if (now.getHours() >= 6 && !lastReset.includes(today)) {
+      resetDaily();
+      resetTrade();
+      localStorage.setItem("lastReset", `${today}-daily`);
+    }
+
+    if (isMonday && now.getHours() === 0 && !lastReset.includes(`${today}-weekly`)) {
+      resetWeekly();
+      resetRepeat();
+      localStorage.setItem("lastReset", `${today}-weekly`);
+    }
+  }
+}, [user, character, resetSection]);
 
   const toggleCheck = async (id: string, index: number) => {
     // 먼저 체크 상태 계산
@@ -96,29 +145,6 @@ export default function DailyCheck() {
         )
       );
     }
-  };
-
-  const resetSection = async (type: "daily" | "weekly" | "repeat" | "trade") => {
-    if (!user || !character) return;
-
-    const updated = checked.map(item =>
-      item.type === type 
-        ? { ...item, checkedCount: 0 } 
-        : item
-    );
-    setChecked(updated);
-
-    const affected = checked.filter(item => item.type === type);
-    await Promise.all(
-      affected.map((item) =>
-        updateChecklistItem(user.uid, character, item.id, {
-          checkedCount: 0,
-          isDone: false,
-        })
-      )
-    );
-
-    if (type === "repeat") setRepeatCycle(1);
   };
 
   const handleDelete = async (id: string) => {
