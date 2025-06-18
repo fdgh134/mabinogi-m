@@ -75,7 +75,7 @@ export default function CharacterPresetSelector() {
 
   return (
     <div className="mt-4">
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex flex-wrap items-center gap-2 mb-2">
         {characters.map((name) => (
           <div key={name} className={`flex items-center px-3 rounded border gap-1 ${
                   selected === name
