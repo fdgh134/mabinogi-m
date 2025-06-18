@@ -1,6 +1,8 @@
 import {
   collection,
   doc,
+  getDoc,
+  setDoc,
   getDocs,
   updateDoc,
   deleteDoc,
@@ -122,4 +124,14 @@ export const characterChecklistExists = async (uid: string, character: string): 
   const ref = collection(db, "checklist", uid, character);
   const snapshot = await getDocs(ref);
   return !snapshot.empty;
+};
+
+export const appendCharacterToUserDoc = async (uid: string, character: string) => {
+  const ref = doc(db, "checklist", uid);
+  const snap = await getDoc(ref);
+  const prev = snap.exists() ? snap.data()?.characters ?? [] : [];
+
+  if (!prev.includes(character)) {
+    await setDoc(ref, { characters: [...prev, character] }, { merge: true });
+  }
 };

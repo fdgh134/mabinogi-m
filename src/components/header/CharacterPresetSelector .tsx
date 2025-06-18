@@ -5,6 +5,7 @@ import {
   copyChecklistToCharacter, 
   deleteCharacterChecklist, 
   characterChecklistExists,
+  appendCharacterToUserDoc,
 } from "../../firebase/checklistService";
 
 export default function CharacterPresetSelector() {
@@ -13,8 +14,8 @@ export default function CharacterPresetSelector() {
     selected, 
     setSelectedCharacter, 
     addCharacter, 
-    removeCharacter,
-    loadCharactersFromFirebase,
+    deleteCharacter,
+    syncWithFirebase,
   } = useCharacterStore();
 
   const { user } = useAuthStore();
@@ -23,45 +24,80 @@ export default function CharacterPresetSelector() {
   // 로그인 직후 Firestore 동기화
   useEffect(() => {
     if (user?.uid) {
-      loadCharactersFromFirebase(user.uid);
+      console.log("사용자 로그인 감지, Firebase 동기화 시작");
+      syncWithFirebase(user.uid);
     }
-  }, [user?.uid, loadCharactersFromFirebase]);
+  }, [user?.uid, syncWithFirebase]);
 
   // 탭 포커스 시 Firestore 동기화
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible" && user?.uid) {
-        loadCharactersFromFirebase(user.uid);
+        console.log("탭 포커스 감지, Firebase 동기화 시작");
+        syncWithFirebase(user.uid);
+      }
+    };
+    const handleFocus = () => {
+      if (user?.uid) {
+        console.log("윈도우 포커스 감지, Firebase 동기화 시작");
+        syncWithFirebase(user.uid);
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () =>
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [user?.uid, loadCharactersFromFirebase]);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [user?.uid, syncWithFirebase]);
 
   // 캐릭터 추가: 최신 기준 중복 검사
   const handleAddCharacter = async () => {
-  const trimmed = newCharacter.trim();
-  if (!trimmed || !user) return;
+    const trimmed = newCharacter.trim();
+    if (!trimmed || !user) return;
 
-  const alreadyInLocal = characters.includes(trimmed);
-  const alreadyInFirebase = await characterChecklistExists(user.uid, trimmed);
+    // 먼저 firebase에서 중복 검사
+    await syncWithFirebase(user.uid);
 
-  if (alreadyInLocal || alreadyInFirebase) {
-    alert(`이미 '${trimmed}' 캐릭터가 존재합니다.`);
-    return;
-  }
+    // 동기화 후 다시 중복 검사
+    const currentCharacters = useCharacterStore.getState().characters;
+    const alreadyExists = currentCharacters.includes(trimmed);
+    
+    if (alreadyExists) {
+      alert(`이미 '${trimmed}' 캐릭터가 존재합니다.`);
+      return;
+    }
 
-  addCharacter(trimmed);
-  await copyChecklistToCharacter(user.uid, trimmed);
+    // firebase에도 한번 더 확인
+    const existInFirebase = await characterChecklistExists(user.uid, trimmed);
+    if (existInFirebase) {
+      alert(`이미 '${trimmed}' 캐릭터가 존재합니다.`);
+      await syncWithFirebase(user.uid);
+      return;
+    }
 
-  setSelectedCharacter(null);
-  setTimeout(() => {
-    setSelectedCharacter(trimmed);
-  }, 0);
-  setNewCharacter("");
-};
+    try {
+      addCharacter(trimmed);
+      await copyChecklistToCharacter(user.uid, trimmed);
+      await appendCharacterToUserDoc(user.uid, trimmed);
+
+      setSelectedCharacter("");
+      setTimeout(() => {
+        setSelectedCharacter(trimmed);
+      }, 100);
+
+      setNewCharacter("");
+
+      setTimeout(() => {
+        setSelectedCharacter(trimmed);
+      }, 500);
+    } catch (error) {
+      console.error("캐릭터 추가 실패:", error);
+      alert("캐릭터 추가 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
 
   const handleDeleteCharacter = async (name: string) => {
     if (!user) return;
@@ -69,8 +105,19 @@ export default function CharacterPresetSelector() {
     const confirmDelete = window.confirm(`'${name}' 캐릭터 프리셋과 저장된 체크리스트를 삭제하시겠습니까?`);
     if (!confirmDelete) return;
 
-    await deleteCharacterChecklist(user.uid, name);
-    removeCharacter(name);
+    try {
+      await deleteCharacterChecklist(user.uid, name);
+      deleteCharacter(name);
+
+      // 삭제 후 동기화
+      setTimeout(() => {
+        syncWithFirebase(user.uid);
+      }, 500);
+
+    } catch (error) {
+      console.error("캐릭터 삭제 실패:", error);
+      alert("캐릭터 삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
