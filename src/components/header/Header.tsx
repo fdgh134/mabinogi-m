@@ -52,7 +52,7 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            <h1 className="text-2xl">
+            <h1 className="text-xl lg:text-2xl">
               환영합니다, {user?.displayName}님!
               <button onClick={() => setEditing(true)} className="ml-2 text-sm text-gray-400 hover:underline">
                 ✏️
@@ -66,7 +66,7 @@ export default function Header() {
             <DarkModeToggle />
             <button
               onClick={handleLogout}
-              className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded"
+              className="bg-red-400 hover:bg-red-500 text-white px-2 lg:px-4 py-2 rounded"
             >
               로그아웃
             </button>
