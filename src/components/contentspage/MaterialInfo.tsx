@@ -6,6 +6,7 @@ export default function MaterialInfo() {
   const [itemNameMap, setItemNameMap] = useState<Map<string, string>>(new Map());
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("https://mabinogi-api.onrender.com/api/items")
@@ -17,8 +18,11 @@ export default function MaterialInfo() {
         nameMap.set(item.id, item.name);
       });
       setItemNameMap(nameMap);
+    })
+    .finally(() => {
+      setLoading(false);
     });
-  }, [])
+  }, []);
 
   const getName = (id: string) => itemNameMap.get(id) || id;
 
@@ -74,45 +78,52 @@ export default function MaterialInfo() {
         </select>
       </div>
 
-      {sortedGroups.map(([subCategory, groupItems]) => (
-        <section key={subCategory} className="mb-12">
-          <h3 className="text-xl font-semibold mb-3 pb-2 border-b border-slate-700/50 dark:border-slate-300/50">
-            📂 {subCategory}
-          </h3>
+      {/* 로딩 중 안내 메세지 */}
+      {loading && 
+        <p className="text-center text-gray-500">
+          ⏳ 아이템 정보 불러오는 중...  
+        </p>}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {groupItems.map((item) => (
-              <div
-                key={item.id}
-                className="border border-slate-700/50 dark:border-slate-300/50 p-4 rounded bg-white dark:bg-gray-800 shadow"
-              >
-                <p className="font-bold mb-2">
-                  🧵 {item.name} ({item.category}/{item.subCategory})
-                </p>
+      {!loading && 
+        sortedGroups.map(([subCategory, groupItems]) => (
+          <section key={subCategory} className="mb-12">
+            <h3 className="text-xl font-semibold mb-3 pb-2 border-b border-slate-700/50 dark:border-slate-300/50">
+              📂 {subCategory}
+            </h3>
 
-                {item.production.ingredients.length > 0 ? (
-                  <div>
-                    <p className="text-sm font-semibold mb-1">📦 재료:</p>
-                    <ul className="ml-4 list-disc text-sm">
-                      {item.production.ingredients.map((ing, index) => {
-                        const ingredientName = getName(ing.itemId);
-                        const methodName = parseMethodOrFrom(ing.source.methodOrFrom);
-                        return (
-                          <li key={index}>
-                            {ingredientName} ({ing.source.type} - {methodName}) x{ing.quantity}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-400">✅ 가공 없이 획득 가능</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {groupItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="border border-slate-700/50 dark:border-slate-300/50 p-4 rounded bg-white dark:bg-gray-800 shadow"
+                >
+                  <p className="font-bold mb-2">
+                    🧵 {item.name} ({item.category}/{item.subCategory})
+                  </p>
+
+                  {item.production.ingredients.length > 0 ? (
+                    <div>
+                      <p className="text-sm font-semibold mb-1">📦 재료:</p>
+                      <ul className="ml-4 list-disc text-sm">
+                        {item.production.ingredients.map((ing, index) => {
+                          const ingredientName = getName(ing.itemId);
+                          const methodName = parseMethodOrFrom(ing.source.methodOrFrom);
+                          return (
+                            <li key={index}>
+                              {ingredientName} ({ing.source.type} - {methodName}) x{ing.quantity}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">✅ 가공 없이 획득 가능</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
     </div>
   );
 }
