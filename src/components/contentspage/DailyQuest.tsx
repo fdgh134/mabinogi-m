@@ -19,7 +19,7 @@ export default function DailyQuest() {
   return (
     <div>
       <div className="flex flex-row justify-between mb-2">
-        <h1 className="mb-4">체크리스트</h1>
+        <h1>체크리스트</h1>
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <span>불길한 소환의 결계 알림</span>
           <div className="relative inline-block w-10 h-6">
