@@ -51,7 +51,7 @@ export const useCharacterStore = create<CharacterStore>((set, get) => ({
       const data = docSnap.data();
       const charList: string[] = data.characters ?? [];
 
-      console.log("✅ Firebase 캐릭터 목록 동기화 완료:", charList);
+      // console.log("✅ Firebase 캐릭터 목록 동기화 완료:", charList);
       set({ characters: charList });
 
       // 현재 선택된 캐릭터가 없고, 캐릭터가 있다면 자동 선택

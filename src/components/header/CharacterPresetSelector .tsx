@@ -24,7 +24,7 @@ export default function CharacterPresetSelector() {
   // 로그인 직후 Firestore 동기화
   useEffect(() => {
     if (user?.uid) {
-      console.log("사용자 로그인 감지, Firebase 동기화 시작");
+      // console.log("사용자 로그인 감지, Firebase 동기화 시작");
       syncWithFirebase(user.uid);
     }
   }, [user?.uid, syncWithFirebase]);
@@ -33,13 +33,13 @@ export default function CharacterPresetSelector() {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible" && user?.uid) {
-        console.log("탭 포커스 감지, Firebase 동기화 시작");
+        // console.log("탭 포커스 감지, Firebase 동기화 시작");
         syncWithFirebase(user.uid);
       }
     };
     const handleFocus = () => {
       if (user?.uid) {
-        console.log("윈도우 포커스 감지, Firebase 동기화 시작");
+        // console.log("윈도우 포커스 감지, Firebase 동기화 시작");
         syncWithFirebase(user.uid);
       }
     };
