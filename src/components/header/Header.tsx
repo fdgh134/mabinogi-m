@@ -34,7 +34,7 @@ export default function Header() {
 
   return (
     <div>
-      <div className="flex flex-row align-middle justify-between p-10 bg-white text-black dark:bg-gray-900 dark:text-white">
+      <div className="flex flex-row align-middle justify-between p-4 lg:p-10 bg-white text-black dark:bg-gray-900 dark:text-white">
         <div className="flex flex-col gap-2">
           {editing ? (
             <div className="flex gap-2 items-center">
@@ -73,7 +73,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="px-10 mb-6">
+      <div className="px-4 lg:px-10 mb-6">
         <CharacterPresetSelector />
       </div>
     </div>

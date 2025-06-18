@@ -5,7 +5,7 @@ interface Props {
 export default function ContentsMap({ onSelect }: Props) {
 
   return (
-    <div className="p-10 pt-0">
+    <div className="p-4 lg:p-10 pt-0">
       <nav>
         <ul className="flex flex-row border-y-1 py-4 divide-x-1 divide-slate-700/50 dark:divide-slate-300/50 border-slate-700/50 dark:border-slate-300/50">
           <li className="px-4 cursor-pointer" onClick={() => onSelect("daily")}>

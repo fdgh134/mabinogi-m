@@ -158,7 +158,7 @@ export default function DailyCheck() {
 
   if (!character) {
     return (
-      <div className="text-center text-gray-500 mt-10">
+      <div className="text-center text-gray-500 mt-10 h-max">
         상단에 캐릭터를 추가 후 사용해 주세요.
       </div>
     );
