@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging } from "firebase/messaging";
 
@@ -14,9 +14,15 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+export const auth = getAuth(app);
 
 export const db = getFirestore(app);
 export const messaging = getMessaging(app);
-export { auth, provider };
+
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error("❌ 로그인 지속성 설정 실패:", error);
+});
+
+export const provider = new GoogleAuthProvider();
+
+provider.setCustomParameters({ prompt: "select_account" });

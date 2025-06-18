@@ -5,6 +5,7 @@ import { auth } from "./lib/firebase";
 import { useAuthStore } from "./hooks/useAuthStore";
 import MainPage from "./pages/MainPage";
 import ContentPage from "./pages/ContentPage";
+import AuthRedirectPage from "./pages/AuthRedirectPage";
 import { requestNotificationPermission } from "./lib/requestNotificationPermission";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
   return (
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/auth-redirect" element={<AuthRedirectPage />} /> 
         <Route path="/content" element={<ContentPage />} />
       </Routes>
   )

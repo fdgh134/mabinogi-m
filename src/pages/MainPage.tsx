@@ -1,20 +1,40 @@
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../lib/firebase";
-import { useAuthStore } from "../hooks/useAuthStore";
 import DarkModeToggle from "../components/darkmode/DarkModeToggle";
+import { auth, provider } from "../lib/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useAuthStore } from "../hooks/useAuthStore";
 
 function MainPage() {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  const handleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      setUser(result.user);
-      navigate("/content");
-    } catch (error) {
-      console.error("Login failed", error);
+  // const handleLogin = () => {
+  //   const loginUrl = `${window.location.origin}/auth-redirect`;
+  //   window.location.href = loginUrl;
+  // };
+
+  const isInAppBrowser = () => {
+    const ua = navigator.userAgent.toLowerCase();
+    return /kakaotalk|instagram|naver|line|facebook/.test(ua);
+  };
+
+
+  const handleLogin = () => {
+    if (isInAppBrowser()) {
+      // ✅ 인앱 브라우저에서는 redirect 방식
+      sessionStorage.setItem("triedLogin", "true");
+      window.location.href = `${window.location.origin}/auth-redirect`;
+    } else {
+      // ✅ 일반 브라우저에서는 popup 방식
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log("✅ 로그인 성공:", result.user);
+          setUser(result.user);
+          navigate("/content");
+        })
+        .catch((error) => {
+          console.error("❌ 팝업 로그인 실패:", error);
+        });
     }
   };
 
