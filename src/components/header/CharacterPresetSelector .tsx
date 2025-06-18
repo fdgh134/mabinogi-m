@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCharacterStore } from "../../stores/useCharacterStore";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { 
@@ -13,11 +13,34 @@ export default function CharacterPresetSelector() {
     selected, 
     setSelectedCharacter, 
     addCharacter, 
-    removeCharacter, 
+    removeCharacter,
+    loadCharactersFromFirebase,
   } = useCharacterStore();
+
   const { user } = useAuthStore();
   const [newCharacter, setNewCharacter] = useState("");
 
+  // 로그인 직후 Firestore 동기화
+  useEffect(() => {
+    if (user?.uid) {
+      loadCharactersFromFirebase(user.uid);
+    }
+  }, [user?.uid, loadCharactersFromFirebase]);
+
+  // 탭 포커스 시 Firestore 동기화
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && user?.uid) {
+        loadCharactersFromFirebase(user.uid);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [user?.uid, loadCharactersFromFirebase]);
+
+  // 캐릭터 추가: 최신 기준 중복 검사
   const handleAddCharacter = async () => {
   const trimmed = newCharacter.trim();
   if (!trimmed || !user) return;
