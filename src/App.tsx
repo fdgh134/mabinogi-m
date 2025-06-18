@@ -6,6 +6,7 @@ import { useAuthStore } from "./hooks/useAuthStore";
 import MainPage from "./pages/MainPage";
 import ContentPage from "./pages/ContentPage";
 import AuthRedirectPage from "./pages/AuthRedirectPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { requestNotificationPermission } from "./lib/requestNotificationPermission";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/auth-redirect" element={<AuthRedirectPage />} /> 
         <Route path="/content" element={<ContentPage />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
       </Routes>
   )
 }
