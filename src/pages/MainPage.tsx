@@ -28,7 +28,7 @@ function MainPage() {
       // ✅ 일반 브라우저에서는 popup 방식
       signInWithPopup(auth, provider)
         .then((result) => {
-          console.log("✅ 로그인 성공:", result.user);
+          // console.log("✅ 로그인 성공:", result.user);
           setUser(result.user);
           navigate("/content");
         })
@@ -39,7 +39,7 @@ function MainPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-#F6F4F4 text-black dark:bg-gray-900 dark:text-white px-4">
+    <div className="relative min-h-screen flex items-center justify-center bg-[#F6F4F4] text-black dark:bg-gray-900 dark:text-white px-4">
       {/* 다크모드 토글 - 우측 상단 */}
       <div className="absolute top-4 right-4">
         <DarkModeToggle />

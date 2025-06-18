@@ -8,6 +8,8 @@ export const useAlertToggle = (uid: string) => {
   const [fcmToken, setFcmToken] = useState("");
 
   useEffect(() => {
+    if (!uid) return;
+    
     const fetch = async () => {
       const docRef = doc(db, "alertSettings", uid);
       const snapshot = await getDoc(docRef);
