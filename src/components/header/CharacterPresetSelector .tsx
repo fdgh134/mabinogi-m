@@ -124,10 +124,10 @@ export default function CharacterPresetSelector() {
     <div className="mt-4">
       <div className="flex flex-wrap items-center gap-2 mb-2">
         {characters.map((name) => (
-          <div key={name} className={`flex items-center px-3 rounded border gap-1 ${
+          <div key={name} className={`flex items-center px-3 rounded-3xl border gap-1 ${
                   selected === name
-                    ? "border-2 border-blue-400 text-gray-700 dark:text-gray-200 font-bold"
-                    : "border-gray-400 dark:border-gray-700 dark:text-white"
+                    ? "bg-[#2E313C] dark:bg-[#5C5C5C] dark:border-none text-white dark:text-gray-200 font-semibold"
+                    : "border-[#D9D9D9] dark:border-gray-700 dark:text-white"
                 }`}>
             <button 
               key={name}
@@ -152,11 +152,11 @@ export default function CharacterPresetSelector() {
           placeholder="새 캐릭터 이름"
           value={newCharacter}
           onChange={(e) => setNewCharacter(e.target.value)}
-          className="px-3 py-1 border flex-1 rounded w-fit dark:bg-gray-800 dark:text-white"
+          className="px-3 py-1 border border-[#D9D9D9] bg-white flex-1 rounded-xl w-fit dark:border-gray-400 dark:bg-gray-800 dark:text-white"
         />
         <button
           onClick={handleAddCharacter}
-          className="bg-green-600 text-white px-4 py-1 rounded"
+          className="bg-[#2BAF7E] text-white px-4 py-1 rounded-xl"
         >
           추가
         </button>

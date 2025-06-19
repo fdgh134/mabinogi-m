@@ -27,7 +27,7 @@ export default function CheckCard({
   };
   return (
     <div
-      className={`border border-slate-700/50 dark:border-slate-300/50 rounded-xl p-4 shadow transition bg-slate-100/50 dark:bg-gray-800
+      className={`rounded-2xl p-4 shadow transition bg-white dark:bg-gray-800
       ${isDone ? "opacity-60" : ""}`}
     >
       <div className="flex justify-between items-start mb-2">

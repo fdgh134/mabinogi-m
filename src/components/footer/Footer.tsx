@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="w-full bg-gray-300 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 text-sm py-4 lg:py-10 mt-10">
+    <footer className="w-full bg-[#2E313C] dark:bg-[#5C5C5C] text-white dark:text-gray-300 text-sm py-4 lg:py-10 mt-10">
       <div className="max-w-6xl mx-auto px-4 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-2">
         <div className="text-center md:text-left">
           <p>ⓒ {new Date().getFullYear()} Mabinogi-M Checklist by YoomJJu</p>

@@ -63,13 +63,13 @@ export default function MaterialInfo() {
           placeholder="🔍 아이템 이름 검색"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border border-slate-700/50 dark:border-slate-300/50 rounded w-full md:w-64"
+          className="p-2 border border-[#d9d9d9] bg-white dark:border-gray-400 dark:bg-gray-800 dark:text-white rounded-xl w-full md:w-64"
         />
         <select
           aria-label="카테고리 선택"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="p-2 bg-white text-black dark:bg-gray-800 dark:text-white border-slate-700/50 dark:border-slate-300/50 border rounded"
+          className="border rounded-xl p-2 bg-white border-[#d9d9d9] dark:bg-gray-800 dark:text-white dark:border-slate-300/50"
         >
           <option value="전체">전체 카테고리</option>
           {subCategoryList.map((cat) => (
@@ -95,7 +95,7 @@ export default function MaterialInfo() {
               {groupItems.map((item) => (
                 <div
                   key={item.id}
-                  className="border border-slate-700/50 dark:border-slate-300/50 p-4 rounded bg-slate-100/50 dark:bg-gray-800 shadow"
+                  className="dark:border-slate-300/50 p-4 rounded-2xl bg-white dark:bg-gray-800 shadow"
                 >
                   <p className="font-bold mb-2">
                     🧵 {item.name} ({item.category}/{item.subCategory})
