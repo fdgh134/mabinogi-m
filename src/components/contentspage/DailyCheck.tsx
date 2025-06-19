@@ -88,7 +88,7 @@ useEffect(() => {
       localStorage.setItem("lastReset", `${today}-daily`);
     }
 
-    if (isMonday && now.getHours() === 0 && !lastReset.includes(`${today}-weekly`)) {
+    if (isMonday && now.getHours() < 6 && !lastReset.includes(`${today}-weekly`)) {
       resetWeekly();
       resetRepeat();
       localStorage.setItem("lastReset", `${today}-weekly`);
