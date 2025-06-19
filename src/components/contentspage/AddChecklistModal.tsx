@@ -38,7 +38,7 @@ export default function AddChecklistModal({ type, onAdd, onClose }: AddChecklist
         <div className="space-y-3">
           <input
             type="text"
-            placeholder="제목 (예: 🧪 회복복 포션 제작)"
+            placeholder="제목 (예: 🧪 회복 포션 제작)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 rounded border border-gray-300 dark:bg-slate-700 dark:text-white"
