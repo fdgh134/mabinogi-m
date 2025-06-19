@@ -6,6 +6,8 @@ import {
   updateChecklistItem,
   addChecklistItem,
   deleteChecklistItem,
+  deleteCharacterChecklist,
+  copyChecklistToCharacter,
 } from "../../firebase/checklistService";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { useCharacterStore } from "../../stores/useCharacterStore";
@@ -39,13 +41,30 @@ export default function DailyCheck() {
         ...item,
         id: item.id ?? "",
         isDone: item.isDone ?? false,
-    }));
+    })) as DailyCheckProps[];
     setChecked(final);
     setIsLoading(false);
   };
 
   syncChecklist();
 }, [user, character]);
+
+const handleResetToTemplate = async () => {
+  if (!user || !character) return;
+
+  const confirmReset = window.confirm("현재 체크리스트를 최신 템플릿으로 초기화하시겠습니까?");
+  if (!confirmReset) return;
+
+  await deleteCharacterChecklist(user.uid, character);
+  await copyChecklistToCharacter(user.uid, character);
+  const items = await getChecklist(user.uid, character);
+    const converted = items.map(item => ({
+      ...item,
+      id: item.id ?? "",
+      isDone: item.isDone ?? false,
+    })) as DailyCheckProps[];
+    setChecked(converted);
+  };
 
 const resetSection = useCallback(async (type: "daily" | "weekly" | "repeat" | "trade") => {
     if (!user || !character) return;
@@ -200,6 +219,9 @@ useEffect(() => {
 
   return (
     <div className="space-y-8">
+      <button onClick={() => handleResetToTemplate()} className="border rounded px-2 py-1 border-gray-400 dark:border-gray-700 dark:text-white">
+        템플릿 초기화
+      </button>
       {sections.map(({ title, list, type, extra, showAdd }) => (
         <section key={type}>
           <div className="flex justify-between items-center mb-4">
