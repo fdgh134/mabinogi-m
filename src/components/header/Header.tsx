@@ -25,7 +25,7 @@ export default function Header() {
 
   return (
     <div>
-      <div className="flex flex-row align-middle justify-between p-4 lg:p-10 bg-white text-black dark:bg-gray-900 dark:text-white">
+      <div className="flex flex-row align-middle justify-between p-4 lg:p-10 bg-[#F6F4F4] text-black dark:bg-gray-900 dark:text-white">
         <div className="flex flex-col justify-center gap-2">
           <h1 className="text-xl lg:text-2xl">
             환영합니다, {user?.displayName}님!

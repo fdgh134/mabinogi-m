@@ -95,7 +95,7 @@ export default function MaterialInfo() {
               {groupItems.map((item) => (
                 <div
                   key={item.id}
-                  className="border border-slate-700/50 dark:border-slate-300/50 p-4 rounded bg-white dark:bg-gray-800 shadow"
+                  className="border border-slate-700/50 dark:border-slate-300/50 p-4 rounded bg-slate-100/50 dark:bg-gray-800 shadow"
                 >
                   <p className="font-bold mb-2">
                     🧵 {item.name} ({item.category}/{item.subCategory})

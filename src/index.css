@@ -3,7 +3,7 @@
 
 html,
 body {
-  @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+  @apply bg-[#F6F4F4] text-black dark:bg-gray-900 dark:text-white;
 }
 
 body {
