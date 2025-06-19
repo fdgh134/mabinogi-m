@@ -21,6 +21,13 @@
     "type": "weekly"
   },
   {
+    "title": "🎟️서큐버스 레이드",
+    "description": "서큐버스 레이드 1회 완료",
+    "totalCount": 1,
+    "checkedCount": 0,
+    "type": "weekly"
+  },
+  {
     "title": "🎟️어비스 던전",
     "description": "어비스 던전 3회 완료",
     "totalCount": 3,

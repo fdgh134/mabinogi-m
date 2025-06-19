@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, deleteDoc, doc, setDoc  } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA-wKRe1T4csgtwt-2vwO42BJvTCXDoZ3U",
@@ -21,9 +21,18 @@ const uploadTemplateChecklist = async () => {
 
   const ref = collection(db, "checklist", "_template", "items");
 
+  // ✅ 기존 데이터 삭제
+  const snapshot = await getDocs(ref);
+  for (const docSnap of snapshot.docs) {
+    await deleteDoc(docSnap.ref);
+    console.log(`🗑 삭제됨: ${docSnap.id}`);
+  }
+
+  // ✅ 새 데이터 업로드
   for (const item of data) {
-    await addDoc(ref, item);
-    console.log(`✅ 템플릿 등록됨: ${item.title}`);
+    const newDocRef = doc(collection(db, "checklist", "_template", "items"));
+    await setDoc(newDocRef, item);
+    console.log(`✅ 등록됨: ${item.title}`);
   }
 
   console.log("🔥 템플릿 전체 업로드 완료!");
