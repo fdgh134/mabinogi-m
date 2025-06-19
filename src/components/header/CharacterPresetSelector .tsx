@@ -126,8 +126,8 @@ export default function CharacterPresetSelector() {
         {characters.map((name) => (
           <div key={name} className={`flex items-center px-3 rounded-3xl border gap-1 ${
                   selected === name
-                    ? "bg-[#2E313C] dark:bg-[#5C5C5C] dark:border-none text-white dark:text-gray-200 font-semibold"
-                    : "border-[#D9D9D9] dark:border-gray-700 dark:text-white"
+                    ? "bg-[#5C5C5C] dark:bg-[#5C5C5C] dark:border-none text-white dark:text-gray-200 font-semibold"
+                    : "border-[#5C5C5C] dark:border-gray-700 dark:text-white"
                 }`}>
             <button 
               key={name}
