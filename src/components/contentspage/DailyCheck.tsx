@@ -11,6 +11,7 @@ import {
 } from "../../firebase/checklistService";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { useCharacterStore } from "../../stores/useCharacterStore";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface DailyCheckProps {
   id: string;
@@ -236,14 +237,23 @@ useEffect(() => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-            {list.map(item => (
-              <CheckCard
-                key={item.id}
-                {...item}
-                onToggle={index => toggleCheck(item.id, index)}
-                onDelete={["daily", "trade"].includes(item.type) ? () => handleDelete(item.id) : undefined}
-              />
-            ))}
+            <AnimatePresence>
+              {list.map(item => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <CheckCard
+                    {...item}
+                    onToggle={index => toggleCheck(item.id, index)}
+                    onDelete={["daily", "trade"].includes(item.type) ? () => handleDelete(item.id) : undefined}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </section>
       ))}

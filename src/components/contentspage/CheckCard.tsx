@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+
 interface CheckCardProps {
   id: string;
   title: string;
@@ -17,6 +20,7 @@ export default function CheckCard({
   onToggle,
   onDelete,
 }: CheckCardProps) {
+  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const isDone = checkedCount >= totalCount;
 
   const handleDeleteClick = () => {
@@ -26,7 +30,8 @@ export default function CheckCard({
     }
   };
   return (
-    <div
+    <motion.div
+      whileHover={{ scale: 1.02, boxShadow: "0 0 24px rgba(43, 175, 126, 0.4)" }}
       className={`rounded-2xl p-4 shadow transition bg-white dark:bg-gray-800
       ${isDone ? "opacity-60" : ""}`}
     >
@@ -48,13 +53,19 @@ export default function CheckCard({
         {/* 체크박스 리스트 */}
         <div className="flex gap-[2px] mt-1">
           {[...Array(totalCount)].map((_, i) => (
-            <input
+            <motion.input
               aria-label={`체크박스 ${i + 1}`}
               key={i}
               type="checkbox"
               checked={i < checkedCount}
-              onChange={() => onToggle(i)}
+              onChange={() => {
+                setClickedIndex(i);
+                onToggle(i);
+                setTimeout(() => setClickedIndex(null), 250);
+              }}
               className="w-5 h-5 accent-blue-500"
+              animate={clickedIndex === i ? { scale: [1, 1.2, 0.95, 1] } : {}}
+              transition={{ duration: 0.3 }}
             />
           ))}
         </div>
@@ -76,6 +87,6 @@ export default function CheckCard({
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
