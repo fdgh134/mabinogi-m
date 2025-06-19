@@ -7,6 +7,7 @@ import {
   characterChecklistExists,
   appendCharacterToUserDoc,
 } from "../../firebase/checklistService";
+import { motion } from "framer-motion"
 
 export default function CharacterPresetSelector() {
   const { 
@@ -124,18 +125,21 @@ export default function CharacterPresetSelector() {
     <div className="mt-4">
       <div className="flex flex-wrap items-center gap-2 mb-2">
         {characters.map((name) => (
-          <div key={name} className={`flex items-center px-3 rounded-3xl border gap-1 ${
-                  selected === name
-                    ? "bg-[#5C5C5C] dark:bg-[#5C5C5C] dark:border-none text-white dark:text-gray-200 font-semibold"
-                    : "border-[#5C5C5C] dark:border-gray-700 dark:text-white"
-                }`}>
-            <button 
-              key={name}
-              onClick={() => setSelectedCharacter(name)}
-              className="py-1 rounded"
-              >
-              {name}
-            </button>
+          <motion.div 
+            key={name} 
+            whileHover={{ scale: 1.07, boxShadow: "0 2px 14px rgba(43, 175, 126, 0.26)" }}
+            whileTap={{ scale: 0.95 }}
+            className={`flex items-center px-3 rounded-3xl border gap-1 ${
+              selected === name
+                ? "bg-[#5C5C5C] dark:bg-[#5C5C5C] dark:border-none text-white dark:text-gray-200 font-semibold"
+                : "border-[#5C5C5C] dark:border-gray-700 dark:text-white"
+            }`}
+            style={{
+              transition: "box-shadow 0.2s, background 0.2s, color 0.2s",
+            }}
+            onClick={() => setSelectedCharacter(name)}
+          >
+            <span className="py-1 rounded">{name}</span>
             <button
                 onClick={() => handleDeleteCharacter(name)}
                 className="text-red-500 hover:text-red-700"
@@ -143,7 +147,7 @@ export default function CharacterPresetSelector() {
               >
                 ❌
             </button>
-          </div>
+          </motion.div>
         ))}
       </div>
       <div className="flex flex-row gap-2">
