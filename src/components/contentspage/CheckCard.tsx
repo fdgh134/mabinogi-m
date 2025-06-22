@@ -31,8 +31,8 @@ export default function CheckCard({
   };
   return (
     <motion.div
-      whileHover={{ scale: 1.02, boxShadow: "0 0 24px rgba(43, 175, 126, 0.4)" }}
-      className={`rounded-2xl p-4 shadow transition bg-white dark:bg-gray-800
+      whileHover={{ scale: 1.02 }}
+      className={`rounded-2xl p-4 shadow transition bg-white dark:bg-gray-800 hover:shadow-lg
       ${isDone ? "opacity-60" : ""}`}
     >
       <div className="flex justify-between items-start mb-2">
