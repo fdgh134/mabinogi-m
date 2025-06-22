@@ -1,6 +1,6 @@
 interface Props {
-  onSelect: (tab: "daily" | "materials") => void;
-  selected: "daily" | "materials";
+  onSelect: (tab: "daily" | "materials" | "runes") => void;
+  selected: "daily" | "materials" | "runes";
 }
 
 export default function ContentsMap({ onSelect, selected }: Props) {
@@ -26,6 +26,15 @@ export default function ContentsMap({ onSelect, selected }: Props) {
             }`}
             onClick={() => onSelect("materials")}>
             🧰가공 재료
+          </li>
+          <li 
+            className={`px-4 cursor-pointer ${
+              selected === "runes" 
+                ? "text-gray-700 dark:text-gray-200 font-bold"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+            onClick={() => onSelect("runes")}>
+            🪨전설 룬 정보
           </li>
         </ul>
       </nav>
