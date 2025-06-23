@@ -26,7 +26,7 @@ interface DailyCheckProps {
 export default function DailyCheck() {
   const [repeatCycle, setRepeatCycle] = useState(1);
   const [checked, setChecked] = useState<DailyCheckProps[]>([]);
-  const [modalType, setModalType] = useState<"daily" | "trade" | null>(null);
+  const [modalType, setModalType] = useState<"daily" | "trade" | "weekly" | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const user = useAuthStore(state => state.user);
@@ -198,7 +198,7 @@ useEffect(() => {
   }[] = [
     { title: "🪢 반복 퀘스트", list: sortChecklist(checked.filter(i => i.type === "repeat")), type: "repeat", extra: `(${repeatCycle}회차)` },
     { title: "📅 일간 숙제", list: sortChecklist(checked.filter(i => i.type === "daily")), type: "daily", showAdd: true },
-    { title: "🗓 주간 숙제", list: sortChecklist(checked.filter(i => i.type === "weekly")), type: "weekly" },
+    { title: "🗓 주간 숙제", list: sortChecklist(checked.filter(i => i.type === "weekly")), type: "weekly", showAdd: true },
     { title: "💱 물물 교환", list: sortChecklist(checked.filter(i => i.type === "trade")), type: "trade", showAdd: true },
   ];
 
@@ -230,7 +230,7 @@ useEffect(() => {
               {title} {extra && <span className="text-sm text-gray-500">{extra}</span>}
             </h3>
             <div className="flex gap-2">
-              {showAdd && (type === "daily" || type === "trade") && (
+              {showAdd && (type === "daily" || type === "trade" || type === "weekly") && (
                 <button onClick={() => setModalType(type)} className="cursor-pointer text-xl">➕</button>
               )}
               <button onClick={() => resetSection(type)} className="cursor-pointer">🔃</button>

@@ -1,14 +1,14 @@
 import { useState } from "react";
 
 interface AddChecklistModalProps {
-  type: "daily" | "trade";
+  type: "daily" | "trade" | "weekly";
   onAdd: (item: {
     title: string;
     description?: string;
     totalCount: number;
     checkedCount: number;
     isDone: boolean;
-    type: "daily" | "trade";
+    type: "daily" | "trade" | "weekly";
   }) => void;
   onClose: () => void;
 }
