@@ -30,6 +30,7 @@ export default function DailyCheck() {
   const [isLoading, setIsLoading] = useState(true);
 
   const user = useAuthStore(state => state.user);
+  const characters = useCharacterStore(state => state.characters);
   const character = useCharacterStore(state => state.selected);
 
   useEffect(() => {
@@ -202,13 +203,21 @@ useEffect(() => {
     { title: "💱 물물 교환", list: sortChecklist(checked.filter(i => i.type === "trade")), type: "trade", showAdd: true },
   ];
 
-  if (!character) {
+  if (!characters || characters.length === 0) {
     return (
       <div className="text-center text-gray-500 mt-10 h-max">
         상단에 캐릭터를 추가 후 사용해 주세요.
       </div>
     );
   }
+
+  if (!character) {
+  return (
+    <div className="text-center text-gray-500 mt-10 h-max">
+      사용할 캐릭터를 선택해 주세요.
+    </div>
+  );
+}
 
   if (isLoading) {
     return (

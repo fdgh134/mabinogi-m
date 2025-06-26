@@ -54,6 +54,12 @@ export default function CharacterPresetSelector() {
     };
   }, [user?.uid, syncWithFirebase]);
 
+  useEffect(() => {
+    if (!selected && characters.length > 0) {
+      setSelectedCharacter(characters[0]);
+    }
+  }, [characters, selected, setSelectedCharacter]);
+
   // 캐릭터 추가: 최신 기준 중복 검사
   const handleAddCharacter = async () => {
     const trimmed = newCharacter.trim();
