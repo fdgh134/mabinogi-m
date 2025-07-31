@@ -229,7 +229,7 @@ useEffect(() => {
 
   return (
     <div className="space-y-8">
-      <button onClick={() => handleResetToTemplate()} className="border rounded-xl bg-[#5C5C5C] dark:bg-white px-2 py-1 text-white border-gray-400 dark:border-gray-700 dark:text-white">
+      <button onClick={() => handleResetToTemplate()} className="border rounded-xl bg-[#5C5C5C] dark:bg-gray-800 px-2 py-1 text-white border-gray-400 dark:border-gray-700 dark:text-white">
         템플릿 초기화
       </button>
       {sections.map(({ title, list, type, extra, showAdd }) => (
