@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCharacterStore } from "../../stores/useCharacterStore";
 import { useAuthStore } from "../../hooks/useAuthStore";
-import { db } from "../../lib/firebase";
+import { db, auth } from "../../lib/firebase";
 import { doc, collection } from "firebase/firestore";
 import { 
   copyChecklistToCharacter, 
@@ -116,6 +116,7 @@ export default function CharacterPresetSelector() {
       alert : alertDocRef.path,
       charCol: charColRef.path,
     });
+    console.log("⛔ auth.currentUser =", auth.currentUser?.uid);
   };
 
   const handleDeleteCharacter = async (name: string) => {
