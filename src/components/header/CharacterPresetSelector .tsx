@@ -6,6 +6,7 @@ import {
   deleteCharacterChecklist, 
   characterChecklistExists,
   appendCharacterToUserDoc,
+  removeCharacterFromUserDoc,
 } from "../../firebase/checklistService";
 import { motion } from "framer-motion"
 
@@ -114,12 +115,11 @@ export default function CharacterPresetSelector() {
 
     try {
       await deleteCharacterChecklist(user.uid, name);
+      await removeCharacterFromUserDoc(user.uid, name);
       deleteCharacter(name);
 
       // 삭제 후 동기화
-      setTimeout(() => {
-        syncWithFirebase(user.uid);
-      }, 500);
+      await syncWithFirebase(user.uid);
 
     } catch (error) {
       console.error("캐릭터 삭제 실패:", error);

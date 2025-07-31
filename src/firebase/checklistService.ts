@@ -8,6 +8,7 @@ import {
   deleteDoc,
   addDoc,
   CollectionReference,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
@@ -134,4 +135,11 @@ export const appendCharacterToUserDoc = async (uid: string, character: string) =
   if (!prev.includes(character)) {
     await setDoc(ref, { characters: [...prev, character] }, { merge: true });
   }
+};
+
+export const removeCharacterFromUserDoc = async (uid: string, character: string) => {
+  const ref = doc(db, "checklist", uid);
+  await updateDoc(ref, {
+    characters: arrayRemove(character),
+  });
 };
