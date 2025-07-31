@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useCharacterStore } from "../../stores/useCharacterStore";
 import { useAuthStore } from "../../hooks/useAuthStore";
+import { db } from "../../lib/firebase";
+import { doc, collection } from "firebase/firestore";
 import { 
   copyChecklistToCharacter, 
   deleteCharacterChecklist, 
@@ -104,6 +106,16 @@ export default function CharacterPresetSelector() {
       console.error("캐릭터 추가 실패:", error);
       alert("캐릭터 추가 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
+
+    const presetDocRef = doc(db, "checklist", user.uid);
+    const alertDocRef  = doc(db, "alertSettings", user.uid);
+    const charColRef   = collection(db, "checklist", user.uid, "checklist");
+
+    console.log("🛠 write target:", {
+      preset: presetDocRef.path,
+      alert : alertDocRef.path,
+      charCol: charColRef.path,
+    });
   };
 
   const handleDeleteCharacter = async (name: string) => {
