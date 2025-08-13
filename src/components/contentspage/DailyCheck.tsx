@@ -258,7 +258,7 @@ useEffect(() => {
                   <CheckCard
                     {...item}
                     onToggle={index => toggleCheck(item.id, index)}
-                    onDelete={["daily", "trade"].includes(item.type) ? () => handleDelete(item.id) : undefined}
+                    onDelete={["daily", "trade", "weekly"].includes(item.type) ? () => handleDelete(item.id) : undefined}
                   />
                 </motion.div>
               ))}
